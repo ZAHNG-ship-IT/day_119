@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日惊喜</title>
+    <!-- 引入粒子效果库 -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <!-- 引入打字机效果库 -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a2a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* 粒子容器 */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        
+        /* 主内容容器 */
+        .container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* 打字机效果容器 */
+        .typing-container {
+            margin: 40px auto;
+            min-height: 60px;
+        }
+        
+        #typed {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffdd59;
+            text-shadow: 0 0 10px #ffdd59, 0 0 20px #ffdd59;
+        }
+        
+        /* 蛋糕容器 */
+        .cake-container {
+            margin-top: 50px;
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+        }
+        
+        /* 蛋糕底部 */
+        .cake-bottom {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 70px;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 蛋糕中间层 */
+        .cake-middle {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 170px;
+            height: 60px;
+            background: linear-gradient(to right, #a8edea, #fed6e3);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 蛋糕顶层 */
+        .cake-top {
+            position: absolute;
+            bottom: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 50px;
+            background: linear-gradient(to right, #fff6b7, #f6416c);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 蛋糕装饰 */
+        .cake-decoration {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 蜡烛 */
+        .candle {
+            position: absolute;
+            bottom: 210px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 35px;
+            background: linear-gradient(to top, #f5f7fa, #c3cfe2);
+            border-radius: 5px;
+        }
+        
+        /* 蜡烛火焰 */
+        .flame {
+            position: absolute;
+            bottom: 245px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 30px;
+            background: radial-gradient(#ffdd59, #ff6b6b);
+            border-radius: 50% 50% 35% 35%;
+            box-shadow: 0 0 10px #ff9f43, 0 0 20px #ff9f43;
+            animation: flicker 0.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0% { height: 30px; opacity: 0.9; }
+            100% { height: 25px; opacity: 1; }
+        }
+        
+        /* 星星 */
+        .star {
+            position: absolute;
+            background-color: #fff;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            animation: twinkle 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* 彩带 */
+        .ribbon {
+            position: absolute;
+            width: 10px;
+            height: 100px;
+            background-color: #ff6b6b;
+            border-radius: 5px;
+            transform-origin: top center;
+            animation: swing 5s ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+        
+        .loader-text {
+            font-size: 2rem;
+            color: #fff;
+            animation: pulse 1s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 密码输入层样式 */
+        #password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a2a, #1a1a3a);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .password-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .password-container h2 {
+            margin-bottom: 20px;
+            color: #ffdd59;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255, 221, 89, 0.5);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 221, 89, 0.5);
+        }
+
+        #unlock-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff9f43);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        #unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+        .hint {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* 心跳动画 */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-icon {
+            display: inline-block;
+            color: #ff6b6b;
+            animation: heartbeat 1.5s infinite;
+            margin: 0 5px;
+        }
+
+        /* 成功动画 */
+        .success-animation {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <!-- 密码输入层 -->
+    <div id="password-screen">
+        <div class="password-container">
+            <h2>解锁生日惊喜 <span class="heart-icon">❤️</span></h2>
+            <div class="input-group">
+                <label for="name-input">张文梅(请输入你的名字)</label>
+                <input type="text" id="name-input" placeholder="请输入你的名字" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label for="birthday-input">请输入你的生日</label>
+                <input type="password" id="birthday-input" placeholder="例如: 0728" autocomplete="off">
+            </div>
+            <button id="unlock-btn">解锁惊喜</button>
+            <div id="error-message" class="error-message"></div>
+            <div class="hint">
+                提示: 输入你的名字和生日 (月日)
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载动画 -->
+    <div class="loader hidden" id="loader">
+        <div class="loader-text">准备惊喜中...</div>
+    </div>
+    
+    <!-- 粒子效果容器 -->
+    <div id="particles-js"></div>
+    
+    <!-- 主内容容器 -->
+    <div class="container">
+        <!-- 打字机效果 -->
+        <div class="typing-container">
+            <div id="typed"></div>
+        </div>
+        
+        <!-- 蛋糕 -->
+        <div class="cake-container">
+            <div class="cake-bottom"></div>
+            <div class="cake-middle"></div>
+            <div class="cake-top"></div>
+            <div class="candle"></div>
+            <div class="flame"></div>
+        </div>
+    </div>
+    
+    <script>
+        // 密码验证
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordScreen = document.getElementById('password-screen');
+            const nameInput = document.getElementById('name-input');
+            const birthdayInput = document.getElementById('birthday-input');
+            const unlockBtn = document.getElementById('unlock-btn');
+            const errorMessage = document.getElementById('error-message');
+            const loader = document.getElementById('loader');
+            
+            // 聚焦到第一个输入框
+            nameInput.focus();
+            
+            // 验证按钮点击事件
+            unlockBtn.addEventListener('click', validatePassword);
+            
+            // 输入框回车键事件
+            nameInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    birthdayInput.focus();
+                }
+            });
+            
+            birthdayInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validatePassword();
+                }
+            });
+            
+            // 验证密码函数
+            function validatePassword() {
+                const name = nameInput.value.trim();
+                const birthday = birthdayInput.value.trim();
+                
+                // 验证输入
+                if (!name || !birthday) {
+                    errorMessage.textContent = "请填写完整信息";
+                    shakeElement(errorMessage);
+                    return;
+                }
+                
+                // 验证密码是否正确
+                if (name === "张文梅" && birthday === "0728") {
+                    // 密码正确，显示成功动画
+                    errorMessage.textContent = "";
+                    unlockSuccess();
+                } else {
+                    // 密码错误
+                    errorMessage.textContent = "信息不正确，请重试";
+                    shakeElement(errorMessage);
+                    
+                    // 清空密码输入框
+                    birthdayInput.value = "";
+                    birthdayInput.focus();
+                }
+            }
+            
+            // 密码正确后的动画
+            function unlockSuccess() {
+                // 禁用输入
+                nameInput.disabled = true;
+                birthdayInput.disabled = true;
+                unlockBtn.disabled = true;
+                
+                // 显示成功消息
+                errorMessage.textContent = "验证成功！正在准备惊喜...";
+                errorMessage.style.color = "#1dd1a1";
+                
+                // 添加成功动画类
+                const passwordContainer = document.querySelector('.password-container');
+                passwordContainer.classList.add('success-animation');
+                
+                // 淡出密码界面
+                setTimeout(() => {
+                    passwordScreen.style.opacity = "0";
+                    passwordScreen.style.transform = "translateY(-100%)";
+                    
+                    // 显示加载动画
+                    setTimeout(() => {
+                        loader.classList.remove('hidden');
+                        
+                        // 隐藏密码层
+                        setTimeout(() => {
+                            passwordScreen.style.display = "none";
+                            
+                            // 定时隐藏加载页面并初始化生日效果
+                            setTimeout(() => {
+                                loader.classList.add('hidden');
+                                initBirthday();
+                            }, 2000);
+                        }, 500);
+                    }, 500);
+                }, 1000);
+            }
+            
+            // 元素抖动效果
+            function shakeElement(element) {
+                element.animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], {
+                    duration: 500,
+                    easing: 'ease-in-out'
+                });
+            }
+        });
+        
+        // 初始化生日效果
+        function initBirthday() {
+            // 初始化粒子效果 - 烟花效果
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 150,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": ["#ff6b6b", "#48dbfb", "#1dd1a1", "#feca57", "#ff9ff3", "#ffdd59"]
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.8,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 6,
+                        "random": true,
+                        "anim": {
+                            "enable": true,
+                            "speed": 4,
+                            "size_min": 0.3,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": false,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 3,
+                        "direction": "top",
+                        "random": true,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 400,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 100,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+            
+            // 初始化打字机效果
+            new Typed('#typed', {
+                strings: ["张文梅,生日快乐"],
+                typeSpeed: 100,
+                backSpeed: 50,
+                startDelay: 1000,
+                cursorChar: '❤',
+                loop: false,
+                onComplete: function(self) {
+                    // 打字完成后添加星星
+                    addStars();
+                    // 添加彩带
+                    addRibbons();
+                }
+            });
+            
+            // 为蛋糕添加装饰
+            addCakeDecorations();
+        }
+        
+        // 添加蛋糕装饰
+        function addCakeDecorations() {
+            const cakeBottom = document.querySelector('.cake-bottom');
+            const cakeMiddle = document.querySelector('.cake-middle');
+            const cakeTop = document.querySelector('.cake-top');
+            
+            // 底层装饰
+            for (let i = 0; i < 10; i++) {
+                const decoration = document.createElement('div');
+                decoration.className = 'cake-decoration';
+                decoration.style.backgroundColor = getRandomColor();
+                decoration.style.bottom = `${Math.random() * 40 + 10}px`;
+                decoration.style.left = `${Math.random() * 170 + 15}px`;
+                cakeBottom.appendChild(decoration);
+            }
+            
+            // 中层装饰
+            for (let i = 0; i < 8; i++) {
+                const decoration = document.createElement('div');
+                decoration.className = 'cake-decoration';
+                decoration.style.backgroundColor = getRandomColor();
+                decoration.style.bottom = `${Math.random() * 40 + 10}px`;
+                decoration.style.left = `${Math.random() * 140 + 15}px`;
+                cakeMiddle.appendChild(decoration);
+            }
+            
+            // 顶层装饰
+            for (let i = 0; i < 6; i++) {
+                const decoration = document.createElement('div');
+                decoration.className = 'cake-decoration';
+                decoration.style.backgroundColor = getRandomColor();
+                decoration.style.bottom = `${Math.random() * 30 + 10}px`;
+                decoration.style.left = `${Math.random() * 110 + 15}px`;
+                cakeTop.appendChild(decoration);
+            }
+        }
+        
+        // 添加星星
+        function addStars() {
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.width = `${Math.random() * 5 + 2}px`;
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = `${Math.random() * 2}s`;
+                    container.appendChild(star);
+                }, i * 100);
+            }
+        }
+        
+        // 添加彩带
+        function addRibbons() {
+            const container = document.querySelector('body');
+            const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57', '#ff9ff3', '#ffdd59'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const ribbon = document.createElement('div');
+                    ribbon.className = 'ribbon';
+                    ribbon.style.left = `${Math.random() * 100}%`;
+                    ribbon.style.top = `-100px`;
+                    ribbon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    ribbon.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+                    ribbon.style.animationDelay = `${Math.random() * 2}s`;
+                    ribbon.style.height = `${Math.random() * 150 + 100}px`;
+                    ribbon.style.width = `${Math.random() * 8 + 3}px`;
+                    container.appendChild(ribbon);
+                    
+                    // 让彩带缓慢出现
+                    setTimeout(() => {
+                        ribbon.style.opacity = '0.7';
+                    }, 100);
+                    
+                    // 10秒后移除彩带以避免内存问题
+                    setTimeout(() => {
+                        ribbon.remove();
+                    }, 10000);
+                }, i * 300);
+            }
+        }
+        
+        // 获取随机颜色
+        function getRandomColor() {
+            const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57', '#ff9ff3', '#ffdd59'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+    </script>
+</body>
+</html>
